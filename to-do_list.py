@@ -27,9 +27,17 @@ def adding():
         add_task(task)
     conn.commit()
 
+#Checking tasks
+def checking():
+    c.execute("SELECT * FROM do_list")
+    my_data = c.fetchall()
+    for i in my_data:
+        print(i)
+
 #Select your function
 func = input('What would you like add a task(A), Check your tasks(C), Remove a task(R): ')
 if func.upper() == 'A':
     adding()
-
+elif func.upper() == 'C':
+    checking()
 conn.close()
