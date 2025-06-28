@@ -2,10 +2,9 @@
 #features include: General select, Adding a to-do, Checking the list, 
 #Finishing a to-do, Deleting a to-do
 import sqlite3
-from logic import add_task
+from logic import add_task, checking
 
 conn = sqlite3.connect('/Users/Emad/Desktop/Github port/to-do/to-do-list.db')
-c = conn.cursor()
 
 #c.execute(""" CREATE TABLE do_list (
  #           finished TEXT,
@@ -17,7 +16,7 @@ c = conn.cursor()
 def adding():
     #loop for adding task multiple times
     while True:
-        task = input('What task would you like to add? (Leave empty to stop adding)')
+        task = input('What task would you like to add? (Leave empty to stop adding): ')
         if task == '':
             break
         #Refers to the logic module
@@ -26,11 +25,11 @@ def adding():
     conn.close()
 
 #Checking tasks
-def checking():
-    c.execute("SELECT * FROM do_list")
-    my_data = c.fetchall()
-    for i in my_data:
-        print(i)
+def check():
+    tasks = checking(conn)
+    for emoji, task in tasks:
+        print(f"{emoji} {task}")
+    conn.close()
 
 #Finishing tasks
 def finish():
@@ -65,7 +64,7 @@ func = input('What would you like to do. Add a task(A), Check your tasks(C), Fin
 if func.upper() == 'A':
     adding()
 elif func.upper() == 'C':
-    checking()
+    check()
 elif func.upper() == 'F':
     finish()
 elif func.upper() == 'R':
