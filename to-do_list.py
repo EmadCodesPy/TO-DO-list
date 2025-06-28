@@ -34,10 +34,25 @@ def checking():
     for i in my_data:
         print(i)
 
+#Finishing tasks
+def finish():
+    def finish_task(task):
+        c.execute("UPDATE 'do_list' SET finished=? WHERE finished=? AND task=?", ('✅','❌', task))
+    finished = True
+    while finished:
+        task = input('What tasks have you finished? (Leave empty to stop changing status): ')
+        if task == '':
+            finished = False
+            continue
+        finish_task(task)
+        print ('✅ ' + task)
+    conn.commit()
 #Select your function
-func = input('What would you like add a task(A), Check your tasks(C), Remove a task(R): ')
+func = input('What would you like to do. Add a task(A), Check your tasks(C), Finish a task(F), Remove a task(R): ')
 if func.upper() == 'A':
     adding()
 elif func.upper() == 'C':
     checking()
+elif func.upper() == 'F':
+    finish()
 conn.close()
