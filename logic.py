@@ -1,25 +1,25 @@
 #Adding logic
-def add_task(conn, task):
+def add_task(conn, task, lst):
     c = conn.cursor()
-    c.execute(f"INSERT INTO 'do_list' VALUES (?,?) ", ('❌', task))
+    c.execute(f"INSERT INTO '{lst}' (emoji, task) VALUES (?,?) ", ('❌', task))
 
 #Checking logic
-def check(conn):
+def check(conn, lst):
     c = conn.cursor()
-    c.execute("SELECT * FROM do_list")
+    c.execute(f"SELECT * FROM {lst}")
     return c.fetchall() 
 
 #Finishing logic
-def finish(conn, task):
+def finish(conn, task, lst):
     c = conn.cursor()
-    c.execute("UPDATE 'do_list' SET finished=? WHERE finished=? AND task=?", ('✅','❌', task))
+    c.execute(f"UPDATE '{lst}' SET emoji=? WHERE emoji=? AND task=?", ('✅','❌', task))
 
 #Removing logic
-def remove_task(conn, task):
+def remove_task(conn, task, lst):
     c = conn.cursor()
-    c.execute("DELETE FROM 'do_list' WHERE (finished=? OR finished =?) AND task=?", ('❌','✅',task))
+    c.execute(f"DELETE FROM '{lst}' WHERE (emoji=? OR emoji =?) AND task=?", ('❌','✅',task))
 
 #Undoing logic
-def undo_task(conn, task):
+def undo_task(conn, task, lst):
     c = conn.cursor()
-    c.execute("UPDATE 'do_list' SET finished=? WHERE finished=? AND task=?", ('❌','✅', task))
+    c.execute(f"UPDATE '{lst}' SET emoji=? WHERE emoji=? AND task=?", ('❌','✅', task))
