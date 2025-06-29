@@ -15,3 +15,7 @@ def create_list(l_name):
 
 def delete_list(l_name):
     c.execute(f"DROP TABLE IF EXISTS {l_name}")
+
+def check_lists():
+    c.execute(f"""SELECT name FROM sqlite_master WHERE type='table';""")
+    return c.fetchall()

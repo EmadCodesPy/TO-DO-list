@@ -3,7 +3,7 @@
 #Finishing a to-do, Deleting a to-do, Create a to-do list
 import sqlite3
 from logic import add_task, check, finish, remove_task, undo_task
-from db_create import create_list, delete_list
+from db_create import create_list, delete_list, check_lists
 #c.execute(""" CREATE TABLE do_list (
  #           finished TEXT,
   #          task TEXT
@@ -87,9 +87,15 @@ def r_list_inp():
         conn.commit()
         conn.close()
 
+#Checking all lists
+def c_lists_inp():
+    my_data = check_lists()
+    for i in my_data:
+        print(i)
+
 #Select your function
 def main():
-    func = input('What would you like to do. Add(A), Check(C), Finish(F), Remove a task(R), Undo(U), Add a list(L), Delete a list(D): ')
+    func = input('What would you like to do. Add(A), Check(C), Finish(F), Remove a task(R), Undo(U), Add a list(L), Delete a list(D), Check lists(CL): ')
     if func.upper() == 'A':
         lst = input("What list would you like to access: ")
         adding_inp(lst)
@@ -109,5 +115,7 @@ def main():
         list_inp()
     elif func.upper() == 'D':
         r_list_inp()
+    elif func.upper() == 'CL':
+        c_lists_inp()
 
 main()
