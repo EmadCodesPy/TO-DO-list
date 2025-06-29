@@ -2,7 +2,7 @@
 #features include: General select, Adding a to-do, Checking the list, 
 #Finishing a to-do, Deleting a to-do
 import sqlite3
-from logic import add_task, check, finish, remove_task
+from logic import add_task, check, finish, remove_task, undo_task
 
 #c.execute(""" CREATE TABLE do_list (
  #           finished TEXT,
@@ -54,8 +54,19 @@ def remove_inp():
     conn.commit()
     conn.close()
 
+#Undoing a task
+def undo_inp():
+    conn = sqlite3.connect('/Users/Emad/Desktop/Github port/to-do/to-do-list.db')
+    while True:
+        task = input('What task would you like to undo? (Leave empty to stop undoing): ')
+        if task == '':
+            break
+        undo_task(conn, task)
+        conn.commit()
+        conn.close()
+
 #Select your function
-func = input('What would you like to do. Add a task(A), Check your tasks(C), Finish a task(F), Remove a task(R): ')
+func = input('What would you like to do. Add a task(A), Check your tasks(C), Finish a task(F), Remove a task(R), Undo a task(U): ')
 if func.upper() == 'A':
     adding_inp()
 elif func.upper() == 'C':
@@ -64,3 +75,5 @@ elif func.upper() == 'F':
     finish_inp()
 elif func.upper() == 'R':
     remove_inp()
+elif func.upper() == 'U':
+    undo_inp()

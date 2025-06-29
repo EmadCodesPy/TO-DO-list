@@ -19,4 +19,7 @@ def remove_task(conn, task):
     c = conn.cursor()
     c.execute("DELETE FROM 'do_list' WHERE finished=? OR finished=? AND task=?", ('❌','✅',task))
 
-    
+#Undoing logic
+def undo_task(conn, task):
+    c = conn.cursor()
+    c.execute("UPDATE 'do_list' SET finished=? WHERE finished=? AND task=?", ('❌','✅', task))
