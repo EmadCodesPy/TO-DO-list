@@ -76,6 +76,7 @@ def list_inp():
         conn.commit()
         conn.close()
 
+#Removing a to-do list
 def r_list_inp():
     conn = sqlite3.connect('to_do_list.db')
     while True:

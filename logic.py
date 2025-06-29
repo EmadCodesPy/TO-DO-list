@@ -6,7 +6,7 @@ def add_task(conn, task, lst):
 #Checking logic
 def check(conn, lst):
     c = conn.cursor()
-    c.execute(f"SELECT * FROM {lst}")
+    c.execute(f"SELECT * FROM '{lst}'")
     return c.fetchall() 
 
 #Finishing logic
