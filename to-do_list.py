@@ -2,7 +2,7 @@
 #features include: General select, Adding a to-do, Checking the list, 
 #Finishing a to-do, Deleting a to-do
 import sqlite3
-from logic import add_task, check, finish
+from logic import add_task, check, finish, remove_task
 
 #c.execute(""" CREATE TABLE do_list (
  #           finished TEXT,
@@ -43,18 +43,14 @@ def finish_inp():
     conn.close()
 
 #Removing a task
-def remove():
+def remove_inp():
     conn = sqlite3.connect('/Users/Emad/Desktop/Github port/to-do/to-do-list.db')
-    def remove_task(task):
-        #c.execute("DELETE FROM 'do_list' WHERE finished=? OR finished=? AND task=?", ('❌','✅',task))
-        print('REMOVED TASK: ' + task)
-    removing = True
-    while removing:
+    while True:
         task = input('What tasks would you like to remove? (Leave empty to stop removing): ')
         if task == '':
-            removing = False
-            continue
-        remove_task(task)
+            break
+        remove_task(conn, task)
+        print('REMOVED TASK: ' + task)
     conn.commit()
     conn.close()
 
@@ -67,4 +63,4 @@ elif func.upper() == 'C':
 elif func.upper() == 'F':
     finish_inp()
 elif func.upper() == 'R':
-    remove()
+    remove_inp()

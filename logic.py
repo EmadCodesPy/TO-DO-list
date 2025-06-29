@@ -13,3 +13,10 @@ def check(conn):
 def finish(conn, task):
     c = conn.cursor()
     c.execute("UPDATE 'do_list' SET finished=? WHERE finished=? AND task=?", ('✅','❌', task))
+
+#Removing logic
+def remove_task(conn, task):
+    c = conn.cursor()
+    c.execute("DELETE FROM 'do_list' WHERE finished=? OR finished=? AND task=?", ('❌','✅',task))
+
+    
