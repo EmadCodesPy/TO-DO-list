@@ -4,7 +4,12 @@ def add_task(conn, task):
     c.execute(f"INSERT INTO 'do_list' VALUES (?,?) ", ('❌', task))
 
 #Checking logic
-def checking(conn):
+def check(conn):
     c = conn.cursor()
     c.execute("SELECT * FROM do_list")
     return c.fetchall() 
+
+#Finishing logic
+def finish(conn, task):
+    c = conn.cursor()
+    c.execute("UPDATE 'do_list' SET finished=? WHERE finished=? AND task=?", ('✅','❌', task))
