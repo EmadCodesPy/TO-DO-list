@@ -1,9 +1,9 @@
 #a to-do list
 #features include: General select, Adding a to-do, Checking the list, 
-#Finishing a to-do, Deleting a to-do
+#Finishing a to-do, Deleting a to-do, Create a to-do list
 import sqlite3
 from logic import add_task, check, finish, remove_task, undo_task
-
+from db_create import create_list, delete_list
 #c.execute(""" CREATE TABLE do_list (
  #           finished TEXT,
   #          task TEXT
@@ -65,8 +65,29 @@ def undo_inp():
         conn.commit()
         conn.close()
 
+#Adding a to-do list
+def list_inp():
+    conn = sqlite3.connect('/Users/Emad/Desktop/Github port/to-do/to-do-list.db')
+    while True:
+        lst = input('What is the name of the list you would like to add: ')
+        if lst == '':
+            break
+        create_list(lst)
+        conn.commit()
+        conn.close()
+
+def r_list_inp():
+    conn = sqlite3.connect('/Users/Emad/Desktop/Github port/to-do/to-do-list.db')
+    while True:
+        lst = input('What is the name of the list you would like to remove: ')
+        if lst == '':
+            break
+        delete_list(lst)
+        conn.commit()
+        conn.close()
+
 #Select your function
-func = input('What would you like to do. Add a task(A), Check your tasks(C), Finish a task(F), Remove a task(R), Undo a task(U): ')
+func = input('What would you like to do. Add(A), Check(C), Finish(F), Remove a task(R), Undo(U), Add a list(L), Delete a list(D): ')
 if func.upper() == 'A':
     adding_inp()
 elif func.upper() == 'C':
@@ -77,3 +98,7 @@ elif func.upper() == 'R':
     remove_inp()
 elif func.upper() == 'U':
     undo_inp()
+elif func.upper() == 'L':
+    list_inp()
+elif func.upper() == 'D':
+    r_list_inp()
