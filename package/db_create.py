@@ -1,7 +1,12 @@
 #run once to create the databse
 import sqlite3
+import os
 
-conn = sqlite3.connect('to_do_list.db')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+db_path = os.path.join(BASE_DIR, 'to_do_list.db')
+
+conn = sqlite3.connect(db_path, check_same_thread=False)
 c = conn.cursor()
 
 

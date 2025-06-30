@@ -6,9 +6,12 @@ import streamlit as st
 import sqlite3
 from logic import add_task, check, finish, undo_task, remove_task
 from db_create import check_lists, create_list, delete_list
+import os
 
 def get_connection():
-    return sqlite3.connect('to_do_list.db')
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    db_path = os.path.join(base_dir, 'to_do_list.db')
+    return sqlite3.connect(db_path, check_same_thread=False)
 
 def list_title(lst):
     col1, col2 = st.columns([0.9,0.2], vertical_alignment='bottom')
