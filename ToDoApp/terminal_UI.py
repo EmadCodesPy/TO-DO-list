@@ -2,7 +2,7 @@
 #features include: General select, Adding a to-do, Checking the list, 
 #Finishing a to-do, Deleting a to-do, Create a to-do list
 import sqlite3
-from logic import add_task, check, finish, remove_task, undo_task
+from  logic import add_task, check, finish, remove_task, undo_task
 from db_create import create_list, delete_list, check_lists
 #c.execute(""" CREATE TABLE do_list (
  #           finished TEXT,
@@ -100,24 +100,41 @@ def main():
     func = input('What would you like to do. Add(A), Check(C), Finish(F), Remove a task(R), Undo(U), Add a list(L), Delete a list(D), Check lists(CL): ')
     if func.upper() == 'A':
         lst = input("What list would you like to access: ")
-        adding_inp(lst)
+        if lst not in check_lists():
+            print('Please input a list that you have created')
+        else:
+            adding_inp(lst)
     elif func.upper() == 'C':
         lst = input("What list would you like to access: ")
-        check_inp(lst)
+        if lst not in check_lists():
+            print('Please input a list that you have created')
+        else:
+            check_inp(lst)
     elif func.upper() == 'F':
         lst = input("What list would you like to access: ")
-        finish_inp(lst)
+        if lst not in check_lists():
+            print('Please input a list that you have created')
+        else:
+            finish_inp(lst)
     elif func.upper() == 'R':
         lst = input("What list would you like to access: ")
-        remove_inp(lst)
+        if lst not in check_lists():
+            print('Please input a list that you have created')
+        else:
+            remove_inp(lst)
     elif func.upper() == 'U':
         lst = input("What list would you like to access: ")
-        undo_inp(lst)
+        if lst not in check_lists():
+            print('Please input a list that you have created')
+        else:
+            undo_inp(lst)
     elif func.upper() == 'L':
         list_inp()
     elif func.upper() == 'D':
         r_list_inp()
     elif func.upper() == 'CL':
         c_lists_inp()
+    else:
+        print('Please input one of the letters')
 
 main()
