@@ -91,7 +91,7 @@ def r_list_inp():
 def c_lists_inp():
     my_data = check_lists()
     for i in my_data:
-        print(i)
+        print(f'{i[0]}')
 
 #Select your function
 def main():

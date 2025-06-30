@@ -15,9 +15,9 @@ def finish(conn, task, lst):
     c.execute(f"UPDATE '{lst}' SET emoji=? WHERE emoji=? AND task=?", ('✅','❌', task))
 
 #Removing logic
-def remove_task(conn, task, lst):
+def remove_task(conn, task, lst, taskid):
     c = conn.cursor()
-    c.execute(f"DELETE FROM '{lst}' WHERE (emoji=? OR emoji =?) AND task=?", ('❌','✅',task))
+    c.execute(f"DELETE FROM '{lst}' WHERE (emoji=? OR emoji =?) AND task=? AND id=?", ('❌','✅',task, taskid))
 
 #Undoing logic
 def undo_task(conn, task, lst):
