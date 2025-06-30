@@ -99,15 +99,17 @@ def sidebar():
         new_list = st.text_input('Name your list', placeholder='name')
         submitted = st.form_submit_button('Create list')
         if submitted and new_list.strip():
-            try:
-                create_list(new_list.strip())
-                st.success(f'Created new list: {new_list}',width='stretch')
-            except:
-                st.error('Please use a new name')
+                    try:
+                        conn = get_connection()
+                        conn.close()
+                        create_list(new_list.strip())
+                        st.success(f'Created new list: {new_list}',width='stretch')
+                    except:
+                        st.error('Please use a new name')
 
 
 def get_lists():
-    return [x[0] for x in check_lists()]
+    return [x[0] for x in check_lists() if x[0] != 'sqlite_sequence']
 
 
 def main():
