@@ -85,12 +85,14 @@ def r_list_inp():
             break
         delete_list(lst)
         conn.commit()
-        conn.close()
+    conn.close()
 
 #Checking all lists
 def c_lists_inp():
     my_data = check_lists()
     for i in my_data:
+        if i[0] == 'sqlite_sequence':
+            continue
         print(f'{i[0]}')
 
 #Select your function
