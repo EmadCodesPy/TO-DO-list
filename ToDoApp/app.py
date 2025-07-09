@@ -85,18 +85,6 @@ def task_page(lst):
     else:
         no_list()
     
-def new_list():
-    st.header('Create a new list')
-    with st.form('Create a new list', clear_on_submit=True):
-        new_list = st.text_input('Name your list', placeholder='name')
-        submitted = st.form_submit_button('Create list')
-        if submitted and new_list.strip():
-            try:
-                create_list(new_list.strip())
-                st.success(f'Created new list: {new_list}')
-            except:
-                st.error('Please use a new name')
-            
 def sidebar():
     with st.sidebar.form('Create a new list', clear_on_submit=True, enter_to_submit=False):
         new_list = st.text_input('Name your list', placeholder='name')
