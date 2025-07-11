@@ -76,7 +76,6 @@ def show_tasks(lst):
     else:
         st.info('No tasks yet!')
 
-
 def task_page(lst):
     if lst:
         list_title(lst)
@@ -85,9 +84,9 @@ def task_page(lst):
     else:
         no_list()
     
-def sidebar():
-    with st.sidebar.form('Create a new list', clear_on_submit=True, enter_to_submit=False):
-        new_list = st.text_input('Name your list', placeholder='name')
+def sidebar_add_list():
+    with st.sidebar.form('Create a new list', clear_on_submit=True):
+        new_list = st.text_input('Create a list', placeholder='name')
         submitted = st.form_submit_button('Create list')
         if submitted and new_list.strip():
                     try:
@@ -98,13 +97,11 @@ def sidebar():
                     except:
                         st.error('Please use a new name')
 
-
 def get_lists():
     return [x[0] for x in check_lists() if x[0] != 'sqlite_sequence']
 
-
 def main():
-    sidebar()
+    sidebar_add_list()
     if not get_lists():
         no_list()
     else:
