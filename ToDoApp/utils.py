@@ -27,6 +27,8 @@ def user_exists(username):
 
 #Validates login
 def login_user(username, password):
+    conn = sqlite3.connect("to_do_list.db", check_same_thread=False)
+    c = conn.cursor()
     c.execute(f'SELECT password FROM users WHERE username=?', (username,))
     row = c.fetchone()
     if row:
