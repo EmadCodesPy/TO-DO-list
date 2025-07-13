@@ -9,11 +9,19 @@ from db_create import check_lists, create_list, delete_list
 import os
 from login import Login, Sign_Up
 from utils import get_username, remove_user
+import shutil
 
 def get_connection():
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    db_path = os.path.join(base_dir, 'to_do_list.db')
-    return sqlite3.connect(db_path, check_same_thread=False)
+    original_path = os.path.join(base_dir, 'to_do_list.db')
+    tmp_path = '/tmp/to_do_list.db'
+
+    if not os.path.exists(tmp_path):
+        shutil.copy(original_path, tmp_path)
+
+    conn = sqlite3.connect(tmp_path, check_same_thread=False)
+    conn.execute("PRAGMA foreign_keys = ON")
+    return conn
 
 def list_title(lst, username):
     col1, col2 = st.columns([0.9,0.2], vertical_alignment='bottom')
@@ -110,9 +118,11 @@ def check_list_exists(username):
         task_page(demo_page, username)
 
 def username_display():
-    st.sidebar.text(f'You are signed in as {get_username(st.session_state.username)}')
+    conn = get_connection()
+    st.sidebar.text(f'You are signed in as {get_username(st.session_state.username, conn)}')
 
 def remove_account():
+    conn = get_connection()
     if 'delete_flow_active' not in st.session_state:
         st.session_state.delete_flow_active = False
     if not st.session_state.delete_flow_active:
@@ -126,7 +136,7 @@ def remove_account():
         with col1:
             if st.button('', icon='🗑️', type='primary'):
                 if st.session_state.confirm_delete_input.strip() == 'YES':
-                    remove_user(get_username(st.session_state.username))
+                    remove_user(get_username(st.session_state.username, conn), conn)
                     st.success('Account Deleted')
                     st.session_state.logged_in = False
                     st.session_state.username = None
@@ -141,9 +151,10 @@ def remove_account():
                 st.rerun()
 
 def sidebar(username):
+    conn = get_connection()
     with st.sidebar:
         st.markdown('### 👤 Account')
-        st.markdown(f'**You are signed in as** {get_username(st.session_state.username)}')
+        st.markdown(f'**You are signed in as** {get_username(st.session_state.username, conn)}')
         logout()
         remove_account()
 
@@ -153,6 +164,7 @@ def sidebar(username):
         add_list(username)
 
 def main():
+    conn = get_connection()
     if 'logged_in' not in st.session_state:
         st.session_state.logged_in = False
         st.session_state.username = None
@@ -161,7 +173,7 @@ def main():
     if not st.session_state.logged_in:
         page_nav.run()
     elif st.session_state.logged_in:
-        username = get_username(st.session_state.username)
+        username = get_username(st.session_state.username, conn)
         sidebar(username)
         check_list_exists(username)
 
