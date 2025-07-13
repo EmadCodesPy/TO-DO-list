@@ -40,7 +40,7 @@ def remove_user(username):
 
 def get_username(username):
     c.execute('SELECT username FROM users WHERE username=?', (username,))
-    return c.fetchone()
+    return c.fetchone()[0]
 
 if __name__ == '__main__':
     remove_user('test1')

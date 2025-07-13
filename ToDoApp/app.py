@@ -8,6 +8,7 @@ from logic import add_task, check, finish, undo_task, remove_task
 from db_create import check_lists, create_list, delete_list
 import os
 from login import Login, Sign_Up
+from utils import get_username
 
 
 def get_connection():
@@ -117,6 +118,10 @@ def check_list_exists():
     else:
         demo_page = st.sidebar.selectbox('Checkout your lists', get_lists())
         task_page(demo_page)
+
+def username_display():
+    st.sidebar.success(f'You are signed in as {get_username(st.session_state.username)}')
+
 def main():
     if 'logged_in' not in st.session_state:
         st.session_state.logged_in = False
@@ -126,6 +131,7 @@ def main():
     if not st.session_state.logged_in:
         pg.run()
     elif st.session_state.logged_in:
+        username_display()
         sidebar_add_list()
         check_list_exists()
 
