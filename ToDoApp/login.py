@@ -1,5 +1,5 @@
 import streamlit as st
-from utils import add_user, login_user, user_exists, create_user_db
+from utils import add_user, login_user, user_exists
 import time
 import shutil
 import os
@@ -42,12 +42,12 @@ def Sign_Up():
     username = st.text_input('Userrname')
     name = st.text_input('Full name')
     password = st.text_input('Password', type='password')
-    
+    conn = get_connection()
     if st.button('Create Account'):
-        if user_exists(username):
+        if user_exists(username, conn):
             st.error('Username already exists :(')
         else:
-            add_user(username, name, password)
+            add_user(username, name, password, conn)
             st.success('Account Created')
             time.sleep(1)
 
