@@ -4,8 +4,8 @@ def add_task(conn, task, lst, username):
     c = conn.cursor()
     c.execute('SELECT id FROM lists WHERE name=? AND username=?', (lst, username))
     result = c.fetchone()
-    if not result:
-        raise ValueError('List not found')
+    #if not result:
+       #raise ValueError('List not found')
     list_id = result[0]
     c.execute(f"INSERT INTO tasks (emoji, task, list_id) VALUES (?,?,?) ", ('❌', task, list_id))
     conn.commit()
@@ -30,8 +30,8 @@ def finish(conn, lst, taskid, username):
     c = conn.cursor()
     c.execute('SELECT id FROM lists WHERE name=? AND username=?', (lst, username))
     result = c.fetchone()
-    if not result:
-        raise ValueError('No tasks')
+    #if not result:
+        #raise ValueError('No tasks')
     list_id = result[0]
     c.execute("UPDATE tasks SET emoji=? WHERE emoji=? AND id=? AND list_id=?", ('✅','❌', taskid, list_id))
     conn.commit()
@@ -43,8 +43,8 @@ def remove_task(conn, lst, taskid, username):
     c = conn.cursor()
     c.execute('SELECT id FROM lists WHERE name=? AND username=?', (lst, username))
     result = c.fetchone()
-    if not result:
-        raise ValueError('No tasks')
+    #if not result:
+        #raise ValueError('No tasks')
     list_id = result[0]
     c.execute("DELETE FROM tasks WHERE id=? AND list_id=?", (taskid, list_id))
     conn.commit()
@@ -56,9 +56,12 @@ def undo_task(conn, lst, taskid, username):
     c = conn.cursor()
     c.execute('SELECT id FROM lists WHERE name=? AND username=?', (lst, username))
     result = c.fetchone()
-    if not result:
-        raise ValueError('No tasks')
+    #if not result:
+        #raise ValueError('No tasks')
     list_id = result[0]
     c.execute("UPDATE tasks SET emoji=? WHERE emoji=? AND id=? AND list_id=?", ('❌','✅',taskid, list_id))
     conn.commit()
     conn.close()
+
+if __name__ == '__main__':
+    check()
