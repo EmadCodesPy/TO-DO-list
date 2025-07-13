@@ -19,8 +19,6 @@ def check(conn, lst, username):
     c = conn.cursor()
     c.execute('SELECT id FROM lists WHERE name=? AND username=?', (lst, username))
     result = c.fetchone()
-    #if not result:
-        #raise ValueError('No tasks')
     if type(result) == None:
         return None
     list_id = result[0]
