@@ -8,8 +8,7 @@ from logic import add_task, check, finish, undo_task, remove_task
 from db_create import check_lists, create_list, delete_list
 import os
 from login import Login, Sign_Up
-from utils import get_username
-
+from utils import get_username, remove_user
 
 def get_connection():
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -123,12 +122,41 @@ def check_list_exists():
 def username_display():
     st.sidebar.text(f'You are signed in as {get_username(st.session_state.username)}')
 
+def remove_account():
+    if 'delete_flow_active' not in st.session_state:
+        st.session_state.delete_flow_active = False
+    if not st.session_state.delete_flow_active:
+        if st.sidebar.button('Delete Account', type='primary', icon='🗑️'):
+            st.session_state.delete_flow_active = True
+            st.rerun()
+    else:
+        st.sidebar.warning('This will :red[Permanently] delete your account')
+        st.sidebar.text_input('Type YES to delete', key='confirm_delete_input')
+        col1, col2 = st.columns([1,1])
+        with col1:
+            if st.button('', icon='🗑️', type='primary'):
+                if st.session_state.confirm_delete_input.strip() == 'YES':
+                    remove_user(get_username(st.session_state.username))
+                    st.success('Account Deleted')
+                    st.session_state.logged_in = False
+                    st.session_state.username = None
+                    st.session_state.name = None
+                    st.session_state.delete_flow_active = False
+                    st.rerun()
+                else:
+                    st.toast('You must type YES to confirm')
+        with col2:
+            if st.button('Cancel'):
+                st.session_state.delete_flow_active = False
+                st.rerun()
+
+
 def sidebar():
     with st.sidebar:
         st.markdown('### 👤 Account')
         st.markdown(f'**You are signed in as** {get_username(st.session_state.username)}')
-
         logout()
+        remove_account()
 
         st.markdown('---')
         st.markdown('### 📋 Create a New List')
@@ -141,7 +169,7 @@ def main():
         st.session_state.logged_in = False
         st.session_state.username = None
         st.session_state.name = None
-    pg = st.navigation([st.Page('login.py', title='Login in page')], position='top')
+    pg = st.navigation([st.Page('login.py', title='Emad\'s to-do web app')], position='top')
     if not st.session_state.logged_in:
         pg.run()
     elif st.session_state.logged_in:
