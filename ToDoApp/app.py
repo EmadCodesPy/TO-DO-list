@@ -7,6 +7,8 @@ import sqlite3
 from logic import add_task, check, finish, undo_task, remove_task
 from db_create import check_lists, create_list, delete_list
 import os
+from login import Login, Sign_Up
+
 
 def get_connection():
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -100,13 +102,32 @@ def sidebar_add_list():
 def get_lists():
     return [x[0] for x in check_lists() if x[0] != 'sqlite_sequence']
 
-def main():
-    sidebar_add_list()
+def log_in_page():
+    pg = st.navigation([Login, Sign_Up], position='top')
+    pg.run()
+
+def logout():
+    st.session_state.logged_in = False
+    st.session_state.username = None
+    st.session_state.name = None
+
+def check_list_exists():
     if not get_lists():
         no_list()
     else:
         demo_page = st.sidebar.selectbox('Checkout your lists', get_lists())
         task_page(demo_page)
+def main():
+    if 'logged_in' not in st.session_state:
+        st.session_state.logged_in = False
+        st.session_state.username = None
+        st.session_state.name = None
+    pg = st.navigation([st.Page('login.py', title='Login in page')], position='top')
+    if not st.session_state.logged_in:
+        pg.run()
+    elif st.session_state.logged_in:
+        sidebar_add_list()
+        check_list_exists()
 
 if __name__ == "__main__":
     main()
