@@ -43,8 +43,7 @@ def create_task(lst, username):
         submitted = st.form_submit_button('Add Task')
         if submitted and new_task.strip():
             try:
-                conn = get_connection()
-                add_task(conn, new_task.strip(), lst, username)
+                add_task(new_task.strip(), lst, username)
                 st.success(f'Task added: {new_task.strip()}')
             except ValueError:
                 st.error('You cannot add two of the same tasks :(')
@@ -52,26 +51,24 @@ def create_task(lst, username):
 def show_tasks(lst, username):
     st.markdown('### Tasks')
     conn = get_connection()
-    tasks = check(conn, lst, username)
+    tasks = check(lst, username)
     conn.close()
     if tasks:
         for task_id, emoji, task in tasks:
             col1, col2, col3 = st.columns([0.1,0.99,0.1], vertical_alignment='center')
             with col1:
                 if st.button(emoji, key=f'btn_{task_id}'):
-                    conn = get_connection()
                     if emoji == '✅':
-                        undo_task(conn, lst, task_id, username)
+                        undo_task(lst, task_id, username)
                         st.rerun()
                     elif emoji == '❌':
-                        finish(conn, lst, task_id, username)
+                        finish(lst, task_id, username)
                         st.rerun()
             with col2:
                 st.text(f'{task}')
             with col3:
                 if st.button('🗑️', key=f'dlt_{task_id}'):
-                    conn = get_connection()
-                    remove_task(conn, lst, task_id, username)
+                    remove_task(lst, task_id, username)
                     st.rerun()
     else:
         st.info('No tasks yet!')
