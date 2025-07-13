@@ -87,18 +87,17 @@ def task_page(lst):
     else:
         no_list()
     
-def sidebar_add_list():
-    with st.sidebar.form('Create a new list', clear_on_submit=True):
-        new_list = st.text_input('Create a list', placeholder='name')
-        submitted = st.form_submit_button('Create list')
-        if submitted and new_list.strip():
-                    try:
-                        conn = get_connection()
-                        conn.close()
-                        create_list(new_list.strip())
-                        st.success(f'Created new list: {new_list}',width='stretch')
-                    except:
-                        st.error('Please use a new name')
+def add_list():
+    list_name = st.text_input('List Name', placeholder='...', )
+    submit = st.button('➕ Create list')
+    if list_name.strip() and submit:
+        try:
+            conn = get_connection()
+            conn.close()
+            create_list(list_name.strip())
+            st.success(f'Created new list: {list_name}',width='stretch')
+        except:
+            st.error('Please use a new name')
 
 def get_lists():
     return [x[0] for x in check_lists() if x[0] != 'sqlite_sequence']
@@ -108,9 +107,11 @@ def log_in_page():
     pg.run()
 
 def logout():
-    st.session_state.logged_in = False
-    st.session_state.username = None
-    st.session_state.name = None
+    if st.sidebar.button('🔓 Logout'):
+        st.session_state.logged_in = False
+        st.session_state.username = None
+        st.session_state.name = None
+        st.rerun()
 
 def check_list_exists():
     if not get_lists():
@@ -120,7 +121,20 @@ def check_list_exists():
         task_page(demo_page)
 
 def username_display():
-    st.sidebar.success(f'You are signed in as {get_username(st.session_state.username)}')
+    st.sidebar.text(f'You are signed in as {get_username(st.session_state.username)}')
+
+def sidebar():
+    with st.sidebar:
+        st.markdown('### 👤 Account')
+        st.markdown(f'**You are signed in as** {get_username(st.session_state.username)}')
+
+        logout()
+
+        st.markdown('---')
+        st.markdown('### 📋 Create a New List')
+
+        add_list()
+
 
 def main():
     if 'logged_in' not in st.session_state:
@@ -131,8 +145,7 @@ def main():
     if not st.session_state.logged_in:
         pg.run()
     elif st.session_state.logged_in:
-        username_display()
-        sidebar_add_list()
+        sidebar()
         check_list_exists()
 
 if __name__ == "__main__":
