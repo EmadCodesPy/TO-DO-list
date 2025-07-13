@@ -19,11 +19,10 @@ def check(conn, lst, username):
     c = conn.cursor()
     c.execute('SELECT id FROM lists WHERE name=? AND username=?', (lst, username))
     result = c.fetchone()
-    if type(result) == None:
-        return None
-    list_id = result[0]
-    c.execute("SELECT id,emoji,task FROM tasks WHERE list_id=?", (list_id,))
-    return c.fetchall()
+    if type(result) != None:
+        list_id = result[0]
+        c.execute("SELECT id,emoji,task FROM tasks WHERE list_id=?", (list_id,))
+        return c.fetchall()
 
 
 #Finishing logic
