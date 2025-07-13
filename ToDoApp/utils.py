@@ -1,7 +1,7 @@
 import bcrypt
 import sqlite3
 
-conn = sqlite3.connect("users.db", check_same_thread=False)
+conn = sqlite3.connect("to_do_list.db", check_same_thread=False)
 c = conn.cursor()
 
 def create_user_db():
@@ -42,5 +42,4 @@ def get_username(username):
     c.execute('SELECT username FROM users WHERE username=?', (username,))
     return c.fetchone()[0]
 
-if __name__ == '__main__':
-    remove_user('test1')
+#if __name__ == '__main__':

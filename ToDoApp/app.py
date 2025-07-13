@@ -15,40 +15,36 @@ def get_connection():
     db_path = os.path.join(base_dir, 'to_do_list.db')
     return sqlite3.connect(db_path, check_same_thread=False)
 
-def list_title(lst):
+def list_title(lst, username):
     col1, col2 = st.columns([0.9,0.2], vertical_alignment='bottom')
     with col1:
         st.title(f'{lst}')
     with col2:
         if st.button('Delete List', type='primary'):
             conn = get_connection()
-            delete_list(lst)
-            conn.commit()
-            conn.close()
+            delete_list(lst, username)
             st.rerun()
 
 def no_list():
     st.warning('You currently have no lists')
     st.error('Please use the sidebar to create a list')
 
-def create_task(lst):
+def create_task(lst, username):
     with st.form('Add a task', clear_on_submit=True):
-        new_task = st.text_input('Enter yout task...', placeholder='task')
+        new_task = st.text_input('Enter your task...', placeholder='task')
         submitted = st.form_submit_button('Add Task')
         if submitted and new_task.strip():
             try:
                 conn = get_connection()
-                add_task(conn, new_task.strip(), lst)
-                conn.commit()
-                conn.close()
+                add_task(conn, new_task.strip(), lst, username)
                 st.success(f'Task added: {new_task.strip()}')
             except ValueError:
                 st.error('You cannot add two of the same tasks :(')
 
-def show_tasks(lst):
+def show_tasks(lst, username):
     st.markdown('### Tasks')
     conn = get_connection()
-    tasks = check(conn, lst)
+    tasks = check(conn, lst, username)
     conn.close()
     if tasks:
         for task_id, emoji, task in tasks:
@@ -57,49 +53,43 @@ def show_tasks(lst):
                 if st.button(emoji, key=f'btn_{task_id}'):
                     conn = get_connection()
                     if emoji == '✅':
-                        undo_task(conn, task, lst, task_id)
-                        conn.commit()
-                        conn.close()
+                        undo_task(conn, lst, task_id, username)
                         st.rerun()
                     elif emoji == '❌':
-                        finish(conn, task, lst, task_id)
-                        conn.commit()
-                        conn.close()
+                        finish(conn, lst, task_id, username)
                         st.rerun()
             with col2:
                 st.text(f'{task}')
             with col3:
                 if st.button('🗑️', key=f'dlt_{task_id}'):
                     conn = get_connection()
-                    remove_task(conn, task, lst, task_id)
-                    conn.commit()
-                    conn.close()
+                    remove_task(conn, lst, task_id, username)
                     st.rerun()
     else:
         st.info('No tasks yet!')
 
-def task_page(lst):
+def task_page(lst, username):
     if lst:
-        list_title(lst)
-        create_task(lst)
-        show_tasks(lst)
+        list_title(lst, username)
+        create_task(lst, username)
+        show_tasks(lst, username)
     else:
         no_list()
     
-def add_list():
+def add_list(username):
     list_name = st.text_input('List Name', placeholder='...', )
     submit = st.button('➕ Create list')
     if list_name.strip() and submit:
         try:
             conn = get_connection()
             conn.close()
-            create_list(list_name.strip())
+            create_list(list_name.strip(), username)
             st.success(f'Created new list: {list_name}',width='stretch')
         except:
             st.error('Please use a new name')
 
-def get_lists():
-    return [x[0] for x in check_lists() if x[0] != 'sqlite_sequence']
+def get_lists(username):
+    return [x[0] for x in check_lists(username) if x[0] != 'sqlite_sequence']
 
 def log_in_page():
     pg = st.navigation([Login, Sign_Up], position='top')
@@ -112,12 +102,12 @@ def logout():
         st.session_state.name = None
         st.rerun()
 
-def check_list_exists():
-    if not get_lists():
+def check_list_exists(username):
+    if not get_lists(username):
         no_list()
     else:
-        demo_page = st.sidebar.selectbox('Checkout your lists', get_lists())
-        task_page(demo_page)
+        demo_page = st.sidebar.selectbox('Checkout your lists', get_lists(username))
+        task_page(demo_page, username)
 
 def username_display():
     st.sidebar.text(f'You are signed in as {get_username(st.session_state.username)}')
@@ -150,8 +140,7 @@ def remove_account():
                 st.session_state.delete_flow_active = False
                 st.rerun()
 
-
-def sidebar():
+def sidebar(username):
     with st.sidebar:
         st.markdown('### 👤 Account')
         st.markdown(f'**You are signed in as** {get_username(st.session_state.username)}')
@@ -161,20 +150,20 @@ def sidebar():
         st.markdown('---')
         st.markdown('### 📋 Create a New List')
 
-        add_list()
-
+        add_list(username)
 
 def main():
     if 'logged_in' not in st.session_state:
         st.session_state.logged_in = False
         st.session_state.username = None
         st.session_state.name = None
-    pg = st.navigation([st.Page('login.py', title='Emad\'s to-do web app')], position='top')
+    page_nav = st.navigation([st.Page('login.py', title='Emad\'s to-do web app')], position='top')
     if not st.session_state.logged_in:
-        pg.run()
+        page_nav.run()
     elif st.session_state.logged_in:
-        sidebar()
-        check_list_exists()
+        username = get_username(st.session_state.username)
+        sidebar(username)
+        check_list_exists(username)
 
 if __name__ == "__main__":
     main()
