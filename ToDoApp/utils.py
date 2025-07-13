@@ -15,7 +15,8 @@ def create_user_db():
     conn.commit()
 
 #adding a new user
-def add_user(username, name, password):
+def add_user(username, name, password,conn):
+    c = conn.cursor()
     hashed_pw = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
     c.execute(f'INSERT INTO users (username, name, password) VALUES (?,?,?)', (username, name, hashed_pw))
     conn.commit()
@@ -26,9 +27,8 @@ def user_exists(username):
     return c.fetchone() is not None
 
 #Validates login
-def login_user(username, password):
-    conn = sqlite3.connect("to_do_list.db", check_same_thread=False)
-    c = conn.cursor()
+def login_user(username, password, connection):
+    c = connection.cursor()
     c.execute(f'SELECT password FROM users WHERE username=?', (username,))
     row = c.fetchone()
     if row:

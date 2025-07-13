@@ -1,18 +1,31 @@
 import streamlit as st
 from utils import add_user, login_user, user_exists, create_user_db
 import time
+import shutil
+import os
+import sqlite3
 
 #create_user_db()
 
+def get_connection():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    original_path = os.path.join(base_dir, 'to_do_list.db')
+    tmp_path = '/tmp/to_do_list.db'
 
+    if not os.path.exists(tmp_path):
+        shutil.copy(original_path, tmp_path)
+
+    conn = sqlite3.connect(tmp_path, check_same_thread=False)
+    conn.execute("PRAGMA foreign_keys = ON")
+    return conn
 
 def Login():
     st.title('Login')
     username = st.text_input('Username')
     password = st.text_input('Password', type='password')
-
+    conn = get_connection()
     if st.button('Login'):
-        if login_user(username, password):
+        if login_user(username, password, conn):
             st.session_state.logged_in = True
             st.session_state.username = username
             st.session_state.name = username

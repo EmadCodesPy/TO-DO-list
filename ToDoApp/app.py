@@ -9,23 +9,11 @@ from db_create import check_lists, create_list, delete_list
 import os
 from login import Login, Sign_Up
 from utils import get_username, remove_user
-import shutil
 
 def get_connection():
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    original_path = os.path.join(base_dir, 'to_do_list.db')
-
-    # Path to the writable copy in /tmp
-    tmp_path = '/tmp/to_do_list.db'
-
-    # If no writable copy exists yet, copy it
-    if not os.path.exists(tmp_path):
-        shutil.copy(original_path, tmp_path)
-
-    # Connect to the writable version
-    conn = sqlite3.connect(tmp_path, check_same_thread=False)
-    conn.execute("PRAGMA foreign_keys = ON")
-    return conn
+    db_path = os.path.join(base_dir, 'to_do_list.db')
+    return sqlite3.connect(db_path, check_same_thread=False)
 
 def list_title(lst, username):
     col1, col2 = st.columns([0.9,0.2], vertical_alignment='bottom')
