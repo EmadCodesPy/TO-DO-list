@@ -53,8 +53,6 @@ def show_tasks(lst, username):
     st.markdown('### Tasks')
     conn = get_connection()
     tasks = check(conn, lst, username)
-    if type(task) == None:
-        st.info('No tasks yet')
     conn.close()
     if tasks:
         for task_id, emoji, task in tasks:

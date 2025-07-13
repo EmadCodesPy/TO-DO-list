@@ -6,6 +6,8 @@ def add_task(conn, task, lst, username):
     result = c.fetchone()
     #if not result:
        #raise ValueError('List not found')
+    if type(result) == None:
+        return None
     list_id = result[0]
     c.execute(f"INSERT INTO tasks (emoji, task, list_id) VALUES (?,?,?) ", ('❌', task, list_id))
     conn.commit()
@@ -19,6 +21,8 @@ def check(conn, lst, username):
     result = c.fetchone()
     #if not result:
         #raise ValueError('No tasks')
+    if type(result) == None:
+        return None
     list_id = result[0]
     c.execute("SELECT id,emoji,task FROM tasks WHERE list_id=?", (list_id,))
     return c.fetchall()
@@ -32,6 +36,8 @@ def finish(conn, lst, taskid, username):
     result = c.fetchone()
     #if not result:
         #raise ValueError('No tasks')
+    if type(result) == None:
+        return None
     list_id = result[0]
     c.execute("UPDATE tasks SET emoji=? WHERE emoji=? AND id=? AND list_id=?", ('✅','❌', taskid, list_id))
     conn.commit()
@@ -45,6 +51,8 @@ def remove_task(conn, lst, taskid, username):
     result = c.fetchone()
     #if not result:
         #raise ValueError('No tasks')
+    if type(result) == None:
+        return None
     list_id = result[0]
     c.execute("DELETE FROM tasks WHERE id=? AND list_id=?", (taskid, list_id))
     conn.commit()
@@ -58,6 +66,8 @@ def undo_task(conn, lst, taskid, username):
     result = c.fetchone()
     #if not result:
         #raise ValueError('No tasks')
+    if type(result) == None:
+        return None
     list_id = result[0]
     c.execute("UPDATE tasks SET emoji=? WHERE emoji=? AND id=? AND list_id=?", ('❌','✅',taskid, list_id))
     conn.commit()
