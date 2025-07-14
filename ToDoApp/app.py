@@ -12,16 +12,12 @@ from utils import get_username, remove_user
 import shutil
 
 def get_connection():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    original_path = os.path.join(base_dir, 'to_do_list.db')
-    tmp_path = '/tmp/to_do_list.db'
-
-    if not os.path.exists(tmp_path):
-        shutil.copy(original_path, tmp_path)
-
-    conn = sqlite3.connect(tmp_path, check_same_thread=False)
-    conn.execute("PRAGMA foreign_keys = ON")
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    db_path = os.path.join(BASE_DIR, 'to_do_list.db')
+    conn = sqlite3.connect(db_path)
+    conn.execute('PRAGMA foreign_keys=ON')
     return conn
+
 
 def list_title(lst, username):
     col1, col2 = st.columns([0.9,0.2], vertical_alignment='bottom')

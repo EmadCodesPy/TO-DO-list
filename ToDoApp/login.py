@@ -8,17 +8,10 @@ import sqlite3
 #create_user_db()
 
 def get_connection():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    original_path = os.path.join(base_dir, 'to_do_list.db')
-    tmp_path = '/tmp/to_do_list.db'
-
-    if not os.path.exists(tmp_path):
-        shutil.copy(original_path, tmp_path)
-
-    conn = sqlite3.connect(tmp_path, check_same_thread=False)
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    conn = sqlite3.connect(os.path.join(BASE_DIR, 'to_do_list.db'))
     conn.execute("PRAGMA foreign_keys = ON")
     return conn
-
 def Login():
     st.title('Login')
     username = st.text_input('Username')

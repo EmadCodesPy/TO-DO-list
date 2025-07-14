@@ -37,3 +37,4 @@ def check_lists(username):
     c.execute("SELECT name FROM lists WHERE username=?", (username,))
     my_lists = [x for x in c.fetchall()]
     return my_lists
+
