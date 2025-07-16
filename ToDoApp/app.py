@@ -161,7 +161,7 @@ def main():
         st.session_state.logged_in = False
         st.session_state.username = None
         st.session_state.name = None
-    page_nav = st.navigation([st.Page('login.py', title='Emad\'s to-do web app')], position='top')
+    page_nav = st.navigation([st.Page('login_page.py', title='Emad\'s to-do web app')], position='top')
     if not st.session_state.logged_in:
         page_nav.run()
     elif st.session_state.logged_in:
