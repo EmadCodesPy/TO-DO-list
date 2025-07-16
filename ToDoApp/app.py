@@ -7,9 +7,8 @@ import sqlite3
 from logic import add_task, check, finish, undo_task, remove_task
 from db_create import check_lists, create_list, delete_list
 import os
-from login import Login, Sign_Up
+from login_page import Login, Sign_Up
 from utils import get_username, remove_user
-import shutil
 
 def get_connection():
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
