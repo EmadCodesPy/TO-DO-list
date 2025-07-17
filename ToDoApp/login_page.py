@@ -1,7 +1,6 @@
 import streamlit as st
 from utils import add_user, login_user, user_exists
 import time
-import shutil
 import os
 import sqlite3
 
