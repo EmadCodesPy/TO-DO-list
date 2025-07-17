@@ -2,7 +2,7 @@
 
 [Emad's To Do List](https://emadstodo.streamlit.app)
 
-# The web app has 2 dependencies:
+The web app has 2 dependencies:
 - streamlit
 - sqlite3
 
